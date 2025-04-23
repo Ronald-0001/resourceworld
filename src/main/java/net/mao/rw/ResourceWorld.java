@@ -2,6 +2,7 @@ package net.mao.rw;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.mao.rw.world.dimension.ResourceDimension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,5 +21,6 @@ public class ResourceWorld implements ModInitializer {
 		// Proceed with mild caution.
 
 		LOGGER.info("Hello Fabric world!");
+		ResourceDimension.register();
 	}
 }

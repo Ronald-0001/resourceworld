@@ -1,0 +1,6 @@
+"datapacks": [
+  {
+    "path": "data",
+    "default_enabled": true
+  }
+]
