@@ -2,7 +2,8 @@ package net.mao.rw;
 
 import net.fabricmc.api.ModInitializer;
 
-import net.mao.rw.world.dimension.ResourceDimension;
+import net.mao.rw.command.Commands;
+import net.mao.rw.world.dimension.ModDimensions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +21,8 @@ public class ResourceWorld implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
+		ModDimensions.register();
+		Commands.register();
 		LOGGER.info("Hello Fabric world!");
-		ResourceDimension.register();
 	}
 }

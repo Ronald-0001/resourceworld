@@ -1,6 +1,6 @@
-"datapacks": [
-  {
-    "path": "data",
-    "default_enabled": true
+{
+  "pack": {
+    "pack_format": 26,
+    "description": "Built-in datapack for Resource World"
   }
-]
+}
