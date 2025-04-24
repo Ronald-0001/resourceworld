@@ -3,13 +3,13 @@
 	"id": "resource-world",
 	"version": "${version}",
 	"name": "Resource World",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Just needed a new dimension to gather resources in instead on my claim based server",
 	"authors": [
-		"Me!"
+		"MaoLMFAO!"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://'not-yet-implemented'.net/",
+		"sources": "https://github.com/Ronald-0001/resourceworld"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/resource-world/icon.png",
