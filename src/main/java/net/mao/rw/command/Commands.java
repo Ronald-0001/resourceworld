@@ -28,8 +28,8 @@ public class Commands {
     private static void RegisterGoToWorlds() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(
-                    CommandManager.literal("goto")
-                            .requires(source -> source.hasPermissionLevel(2)) // Only ops
+                    CommandManager.literal("goto") //TODO: add to config
+                            .requires(source -> source.hasPermissionLevel(0)) // Everyone! ~~Only ops~~
                             .then(CommandManager.literal("resourceworld")
                                     .executes(context -> teleportToWorld(context, "resourceworld"))
                             )
