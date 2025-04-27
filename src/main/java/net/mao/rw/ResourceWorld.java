@@ -26,3 +26,6 @@ public class ResourceWorld implements ModInitializer {
 		LOGGER.info("Hello Fabric world!");
 	}
 }
+
+//TODO: create an event handler that ensures the player is not in a resource dimension when leaving
+//"to fix bug where the world gets removed and client is tp to overworld at same cords either suffocating or splatting to the ground"
