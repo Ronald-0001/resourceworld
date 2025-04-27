@@ -22,14 +22,22 @@ import net.minecraft.world.dimension.DimensionTypes;
 
 public class Commands {
     public static void register() {
+        RegisterWorldResetter();
         RegisterGoToWorlds();
     }
 
+    private static void RegisterWorldResetter() {
+        //TODO: must be op!
+        //TODO: reset targeted resource dimension
+    }
+
     private static void RegisterGoToWorlds() {
+        //TODO: make command auto fill for every dimension
+        //TODO: make config for dimensions not to include in the command
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(
                     CommandManager.literal("goto") //TODO: add to config
-                            .requires(source -> source.hasPermissionLevel(0)) // Everyone! ~~Only ops~~
+                            .requires(source -> source.hasPermissionLevel(0)) // Everyone! ~~Only ops~~ //TODO: add to config also
                             .then(CommandManager.literal("resourceworld")
                                     .executes(context -> teleportToWorld(context, "resourceworld"))
                             )
@@ -46,6 +54,7 @@ public class Commands {
         });
     }
 
+    //TODO: take in dim name ex minecraft:overworld
     private static int teleportToWorld(CommandContext<ServerCommandSource> context, String worldName) {
         ServerWorld targetWorld = null;
 
