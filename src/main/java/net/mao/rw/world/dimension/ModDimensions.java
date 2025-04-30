@@ -2,6 +2,8 @@ package net.mao.rw.world.dimension;
 
 import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
@@ -34,6 +36,13 @@ public class ModDimensions {
             ModDimensions.createCustomDimension(server);
         });
 
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
+            if (ModDimensions.tempWorldHandle != null) {
+                ModDimensions.tempWorldHandle.delete();  // Deletes world data from disk
+                ModDimensions.tempWorldHandle = null;
+                ResourceWorld.LOGGER.info("Deleted temporary dimension on server shutdown.");
+            }
+        });
     }
 
     public static void createCustomDimension(MinecraftServer server) {
@@ -69,11 +78,13 @@ public class ModDimensions {
 
         // Create the dimension
         //RegistryKey<World> dimensionKey = RegistryKey.of(RegistryKeys.WORLD, new Identifier(ResourceWorld.MOD_ID, "dimension"));
-        tempWorldHandle = fantasy.openTemporaryWorld(worldConfig);
+        //tempWorldHandle = fantasy.openTemporaryWorld(worldConfig);
+        tempWorldHandle = fantasy.getOrOpenPersistentWorld(new Identifier("resource", "overworld"), worldConfig);
 
         // set a block in our created temporary world!
         ServerWorld world = tempWorldHandle.asWorld();
         world.setBlockState(BlockPos.ORIGIN, Blocks.BEDROCK.getDefaultState());
+
 
         ResourceWorld.LOGGER.info("Created temporary overworld!");
 
