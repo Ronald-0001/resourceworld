@@ -1,5 +1,14 @@
 package net.mao.rw.world.dimension;
 
+import net.minecraft.registry.*;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.source.BiomeSource;
+import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
+import net.minecraft.world.biome.source.MultiNoiseBiomeSourceParameterList;
+import net.minecraft.world.biome.source.MultiNoiseBiomeSourceParameterLists;
+import net.minecraft.world.gen.chunk.*;
+
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.mao.rw.ResourceWorld;
 import net.minecraft.block.Blocks;
@@ -8,7 +17,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.dimension.DimensionTypes;
-import net.minecraft.registry.DynamicRegistryManager;
 import xyz.nucleoid.fantasy.Fantasy;
 import xyz.nucleoid.fantasy.RuntimeWorldConfig;
 import xyz.nucleoid.fantasy.RuntimeWorldHandle;
@@ -35,11 +43,29 @@ public class ModDimensions {
         // Generate a unique random seed
         long customSeed = new Random().nextLong();
 
+        // Set up BiomeSource (for Overworld-like biomes)
+        Registry<MultiNoiseBiomeSourceParameterList> multiNoiseBiomeSourceParameterListRegistry =
+                registryManager.get(RegistryKeys.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST);
+        RegistryEntry<MultiNoiseBiomeSourceParameterList> multiNoiseBiomeSourceParameterListEntry =
+                multiNoiseBiomeSourceParameterListRegistry.getEntry(MultiNoiseBiomeSourceParameterLists.OVERWORLD)
+                        .orElseThrow(() -> new IllegalStateException("Overworld parameter list not found"));
+
+        var biomeSource = MultiNoiseBiomeSource.create(multiNoiseBiomeSourceParameterListEntry);
+
+        // Set up ChunkGeneratorSettings (for Overworld-like terrain)
+        Registry<ChunkGeneratorSettings> chunkGeneratorSettingsRegistry =
+                registryManager.get(RegistryKeys.CHUNK_GENERATOR_SETTINGS);
+        RegistryEntry<ChunkGeneratorSettings> chunkGeneratorSettingsEntry =
+                chunkGeneratorSettingsRegistry.getEntry(ChunkGeneratorSettings.OVERWORLD)
+                        .orElseThrow(() -> new IllegalStateException("Missing Overworld parameter list"));
+
+        // Create a runtime world config for Fantasy
         RuntimeWorldConfig worldConfig = new RuntimeWorldConfig()
-                .setDimensionType(DimensionTypes.OVERWORLD)
                 .setDifficulty(Difficulty.HARD)
-                .setGenerator(server.getOverworld().getChunkManager().getChunkGenerator())
-                .setSeed(customSeed);
+                .setShouldTickTime(true)
+                .setDimensionType(DimensionTypes.OVERWORLD) // Set as Overworld dimension
+                .setSeed(customSeed)
+                .setGenerator(new NoiseChunkGenerator(biomeSource, chunkGeneratorSettingsEntry)); // Use NoiseChunkGenerator
 
         // Create the dimension
         //RegistryKey<World> dimensionKey = RegistryKey.of(RegistryKeys.WORLD, new Identifier(ResourceWorld.MOD_ID, "dimension"));
