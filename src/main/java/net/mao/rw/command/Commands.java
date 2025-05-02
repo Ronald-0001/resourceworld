@@ -37,6 +37,7 @@ public class Commands {
 
     private static void RegisterWorldResetter() {
         //TODO: make config for dimensions not to include in the command
+        //TODO: make config for permission level
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(
                     CommandManager.literal("reset")
@@ -61,6 +62,7 @@ public class Commands {
 
     private static void RegisterGoToWorlds() {
         //TODO: make config for dimensions not to include in the command
+        //TODO: make config for permission level
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(
                     CommandManager.literal("goto")
