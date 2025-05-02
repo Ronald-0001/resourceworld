@@ -36,12 +36,30 @@ public class Commands {
     }
 
     private static void RegisterWorldResetter() {
-        //TODO: must be op!
-        //TODO: reset targeted resource dimension
+        //TODO: make config for dimensions not to include in the command
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+            dispatcher.register(
+                    CommandManager.literal("reset")
+                            .requires(source -> source.hasPermissionLevel(2))
+                            .then(CommandManager.argument("dimension", IdentifierArgumentType.identifier())
+                                    .suggests(ModDimensions.DIMENSION_SUGGESTIONS)
+                                    .executes(context -> {
+                                        Identifier id = IdentifierArgumentType.getIdentifier(context, "dimension");
+                                        if (!ModDimensions.Dimensions.containsKey(id)) {
+                                            return 0;
+                                        }
+
+                                        ModDimensions dimension = ModDimensions.Dimensions.get(id);
+                                        dimension.reset(context.getSource().getServer());
+
+                                        return 1;
+                                    })
+                            )
+            );
+        });
     }
 
     private static void RegisterGoToWorlds() {
-        //TODO: make command auto fill for every dimension
         //TODO: make config for dimensions not to include in the command
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(
@@ -59,9 +77,7 @@ public class Commands {
     }
 
     // Suggest only dimensions from registry (you can filter here)
-    private static final SuggestionProvider<ServerCommandSource> DIMENSION_SUGGESTIONS = (context, builder) -> {
-        return suggestDimensionIds(context, builder);
-    };
+    private static final SuggestionProvider<ServerCommandSource> DIMENSION_SUGGESTIONS = Commands::suggestDimensionIds;
     private static CompletableFuture<Suggestions> suggestDimensionIds(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) {
         return CompletableFuture.supplyAsync(() -> {
             MinecraftServer server = context.getSource().getServer();
